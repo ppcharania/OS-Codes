@@ -1,0 +1,53 @@
+import java.util.*;
+
+class TicketBooking
+{
+    Scanner sc=new Scanner(System.in);
+    int c=2;
+    synchronized public void Ticket()
+    {
+        try
+        {
+            System.out.println("Pls enter the number of tickets to be booked");
+            int n=sc.nextInt();
+            if (c==0) {
+                System.out.println("Sorry! No ticket left for booking."); 
+            }
+            else if (n<=c) {
+                c=c-n;  
+                System.out.println("Tickets Booked Successfully!! Fare= "+(100*n)); 
+            }
+            else{
+                System.out.println("Sorry! only "+c+" seat left"); 
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        System.out.println("Thaks for bearing with us");
+    }
+}
+class Passenger extends Thread
+{
+    TicketBooking t;
+    Passenger(TicketBooking t)
+    {
+        this.t=t;
+    }
+    public void run()
+    {
+        t.Ticket();
+    }
+}
+class BookTicket
+{
+    public static void main(String args[])
+    {
+        TicketBooking t1=new TicketBooking();
+        Passenger p1=new Passenger(t1);
+        Passenger p2= new Passenger(t1);
+        p1.start();
+        p2.start();
+    }
+}
