@@ -1,0 +1,80 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define n 10
+
+struct process{
+    int pid, arr, bt, ct, turn, wt;
+};
+int main(){
+    struct process p[n], temp;
+    int i, j, m;
+    double avgtt, avgwt, ttt=0, twt=0;
+    printf("Enter no. of processes: ");
+    scanf("%d",&m);
+    printf("Enter Process ID, Arrival Time and Burst Time for each process :\n");
+    for(i=0;i<m;i++){
+        printf("Process %d: ",i+1);
+        scanf("%d %d %d", &p[i].pid, &p[i].arr, &p[i].bt);
+    }
+    for(i=0;i<m;i++){
+        for(j=0;j<m-i-1;j++){
+            if(p[j].arr>p[j+1].arr){
+                temp=p[j];
+                p[j]=p[j+1];
+                p[j+1]=temp;
+            }
+        }
+    }
+    for(i=0;i<m;i++){
+        if(i==0){
+            p[i].ct=p[i].bt+p[i].arr;
+        }
+        else{
+            if(p[i-1].ct<p[i].arr){
+                p[i].ct=p[i].arr+p[i].bt;
+            }
+            else{
+                p[i].ct=p[i-1].ct+p[i].bt;
+            }
+        }
+        p[i].turn=p[i].ct-p[i].arr;
+        p[i].wt=p[i].turn-p[i].bt;
+    }
+    printf("Process\tArrival\tBurst\tCompletion\tTurnaround\tWaiting\n");
+    for(i=0;i<m;i++){
+        printf("%d\t\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t%d\n",p[i].pid,p[i].arr,p[i].bt,p[i].ct,p[i].turn,p[i].wt);
+        ttt+=p[i].turn;
+        twt+=p[i].wt;
+    }
+    avgtt=ttt/m;
+    avgwt=twt/m;
+    if(p[0].arr!=0)
+    {
+        printf("|\tI\t");
+    }
+    for(int i=0; i<m; i++)
+    {
+        if(p[i-1].ct<p[i].arr && i!=0){
+                printf("|\tI\t");
+            }
+           
+	    printf("|\tP%d\t",p[i].pid);
+	}
+	printf("|");
+	printf("\n");
+	    printf("0\t\t");
+	    if(p[0].arr!=0)
+        {
+            printf("%d\t\t",p[0].arr);
+        }
+		for(int i=0; i<m; i++)
+		{
+		    if(p[i-1].ct<p[i].arr && i!=0)
+		    {
+                printf("%d\t\t",p[i].arr);
+            }
+		    printf("%d\t\t",p[i].ct);
+	    }
+    printf("\n\nAverage turnaround time : %lf\nAverage Waiting time : %lf",avgtt, avgwt);
+    return 0;
+}
