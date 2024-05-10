@@ -1,0 +1,313 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_SIZE 100
+void sort_asc(int arr[],int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(arr[j]>arr[j+1])
+            {
+                int temp=arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=temp;
+            }
+        }
+    }
+}
+void sort_desc(int arr[],int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(arr[j]<arr[j+1])
+            {
+                int temp=arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=temp;
+            }
+        }
+    }
+}
+void FCFS(int req[],int head,int n)
+{
+    int i,tot_mov;
+    printf("Requests Processed in following sequence:\n%d",head);
+    for(i=0;i<n;i++)
+    {
+        printf("->%d",req[i]);
+    }
+    printf("\n");
+    tot_mov=abs(req[0]-head);
+    for(i=1;i<n;i++)
+    {
+        tot_mov+=abs(req[i]-req[i-1]);
+    }
+    printf("Total Movement: %d\n",tot_mov);
+    return;
+}
+void SSTF(int req[],int head,int n)
+{
+    int cp=head;
+    int k,i,j;
+    int min,mini;
+    int new_req[MAX_SIZE];
+    int index[MAX_SIZE];
+    for(k=0;k<n;k++)
+    {
+        for(i=0;i<n;i++)
+        {
+            index[i]=abs(cp-req[i]); 
+        }
+    // to find the nearest request
+    min=index[0];
+    mini=0;
+    for(i=1;i<n;i++)
+    {
+        if(min>index[i])
+        {
+            min=index[i];
+            mini=i;
+        }
+    }
+    new_req[j]=req[mini];
+    j++;
+    cp=req[mini]; // change the current position value to next request
+    req[mini]=999;
+    }
+    FCFS(new_req,head,n);
+}
+void SCAN(int req[],int head,int n)
+{
+    int new_req[MAX_SIZE],i;
+    int dir;
+    int greater[MAX_SIZE],g_ind=-1;
+    int lesser[MAX_SIZE],l_ind=-1;
+    printf("Enter direction: 1:UP 2:DOWN :\t");
+    scanf("%d",&dir);
+    if(dir==1)
+    {
+        req[n]=199;
+    }
+    else
+    {
+        req[n]=0;
+    }
+    n=n+1;
+    for(i=0;i<n;i++)
+    {
+        if(req[i]>head)
+        {
+            g_ind++;
+            greater[g_ind]=req[i];
+        }
+        else
+        {
+            l_ind++;
+            lesser[l_ind]=req[i];
+        }
+    }
+    
+    sort_asc(greater,g_ind+1);
+    sort_desc(lesser,l_ind+1);
+    if(dir==1)
+    {
+        for(i=0;i<=g_ind;i++)
+        {
+            new_req[i]=greater[i];
+        }
+        for(i=0;i<=l_ind;i++)
+        {
+            new_req[g_ind+i+1]=lesser[i];
+        }
+    }
+    else
+    {
+         for(i=0;i<=l_ind;i++)
+        {
+            new_req[i]=lesser[i];
+        }
+        for(i=0;i<=g_ind;i++)
+        {
+            new_req[l_ind+i+1]=greater[i];
+        }
+    }
+    FCFS(new_req,head,n);
+    return;
+}
+void CSCAN(int req[],int head,int n)
+{
+    int new_req[MAX_SIZE],i;
+    int dir;
+    int greater[MAX_SIZE],g_ind=-1;
+    int lesser[MAX_SIZE],l_ind=-1;
+    printf("Enter direction: 1:UP 2:DOWN :\t");
+    scanf("%d",&dir);
+    req[n]=0;
+    req[n+1]=199;
+    n=n+2;
+    for(i=0;i<n;i++)
+    {
+        if(req[i]>head)
+        {
+            g_ind++;
+            greater[g_ind]=req[i];
+        }
+        else
+        {
+            l_ind++;
+            lesser[l_ind]=req[i];
+        }
+    }
+    if(dir==1)
+    {
+        sort_asc(greater,g_ind+1);
+        sort_asc(lesser,l_ind+1);
+        for(i=0;i<=g_ind;i++)
+        {
+            new_req[i]=greater[i];
+        }
+        for(i=0;i<=l_ind;i++)
+        {
+            new_req[g_ind+i+1]=lesser[i];
+        }
+    }
+    else
+    {
+        sort_desc(greater,g_ind+1);
+        sort_desc(lesser,l_ind+1);
+        for(i=0;i<=l_ind;i++)
+        {
+            new_req[i]=lesser[i];
+        }
+        for(i=0;i<=g_ind;i++)
+        {
+            new_req[l_ind+i+1]=greater[i];
+        }
+    }
+    FCFS(new_req,head,n);
+    return;
+}
+void LOOK(int req[],int head,int n)
+{
+    int new_req[MAX_SIZE],i;
+    int dir;
+    int greater[MAX_SIZE],g_ind=-1;
+    int lesser[MAX_SIZE],l_ind=-1;
+    printf("Enter direction: 1:UP 2:DOWN :\t");
+    scanf("%d",&dir);
+    for(i=0;i<n;i++)
+    {
+        if(req[i]>head)
+        {
+            g_ind++;
+            greater[g_ind]=req[i];
+        }
+        else
+        {
+            l_ind++;
+            lesser[l_ind]=req[i];
+        }
+    }
+    
+    sort_asc(greater,g_ind+1);
+    sort_desc(lesser,l_ind+1);
+    if(dir==1)
+    {
+        for(i=0;i<=g_ind;i++)
+        {
+            new_req[i]=greater[i];
+        }
+        for(i=0;i<=l_ind;i++)
+        {
+            new_req[g_ind+i+1]=lesser[i];
+        }
+    }
+    else
+    {
+         for(i=0;i<=l_ind;i++)
+        {
+            new_req[i]=lesser[i];
+        }
+        for(i=0;i<=g_ind;i++)
+        {
+            new_req[l_ind+i+1]=greater[i];
+        }
+    }
+    FCFS(new_req,head,n);
+    return;
+}
+void CLOOK(int req[],int head,int n)
+{
+    int new_req[MAX_SIZE],i;
+    int dir;
+    int greater[MAX_SIZE],g_ind=-1;
+    int lesser[MAX_SIZE],l_ind=-1;
+    printf("Enter direction: 1:UP 2:DOWN :\t");
+    scanf("%d",&dir);
+    for(i=0;i<n;i++)
+    {
+        if(req[i]>head)
+        {
+            g_ind++;
+            greater[g_ind]=req[i];
+        }
+        else
+        {
+            l_ind++;
+            lesser[l_ind]=req[i];
+        }
+    }
+    if(dir==1)
+    {
+        sort_asc(greater,g_ind+1);
+        sort_asc(lesser,l_ind+1);
+        for(i=0;i<=g_ind;i++)
+        {
+            new_req[i]=greater[i];
+        }
+        for(i=0;i<=l_ind;i++)
+        {
+            new_req[g_ind+i+1]=lesser[i];
+        }
+    }
+    else
+    {
+        sort_desc(greater,g_ind+1);
+        sort_desc(lesser,l_ind+1);
+        for(i=0;i<=l_ind;i++)
+        {
+            new_req[i]=lesser[i];
+        }
+        for(i=0;i<=g_ind;i++)
+        {
+            new_req[l_ind+i+1]=greater[i];
+        }
+    }
+    FCFS(new_req,head,n);
+    return;
+}
+int main()
+{
+    int n,i,head;
+    int req[MAX_SIZE]={-1};
+    printf("Considering 0 as the start and 199 as the end location\n");
+    printf("Enter the number of Disk Requests: ");
+    scanf("%d",&n);
+    printf("Enter the requests: ");
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",&req[i]);
+    }
+    printf("Enter the head position: ");
+    scanf("%d",&head);
+    // FCFS(req,head,n);
+    // SSTF(req,head,n)
+    // SCAN(req,head,n);
+    // CSCAN(req,head,n);
+    // CLOOK(req,head,n);
+    // LOOK(req,head,n);
+    return 0;
+}
